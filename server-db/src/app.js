@@ -86,19 +86,27 @@ app.use(log4js.connectLogger(logger, { level: 'info' }));
 
 require('./routes')(app)
  
-// true - очистка базы:
-sequelize.sync({ force: false })
-  .then(() => {
-    app.listen(config.port)
-    logger.info(`Server started on port ${config.port}`)
-    console.log(`Server started on port ${config.port}`)
-  })
-/*
+async () => {
+  try {
+      // true - очистка базы:
+      await sequelize.sync({ force: false })
+    } catch(err) {
+      console.error('sequelize.sync exeption')
+      process.exit()
+  }
+}
+
+// app.listen(config.port)
+// logger.info(`Server started on port ${config.port}`)
+// console.log(`Server started on port ${config.port}`)
+
 const fs = require('fs')
-const https = require('https')
-const httpsPort = 3001
-var key = fs.readFileSync(__dirname + '/certsFiles/selfsigned.key')
-var cert = fs.readFileSync(__dirname + '/certsFiles/selfsigned.crt')
+const https = require('https');
+
+// стандартный для HTTPS порт 443 
+const httpsPort = 443
+var key = fs.readFileSync(__dirname + '/certs/server.key')
+var cert = fs.readFileSync(__dirname + '/certs/server.crt')
 
 var credentials = {
   key: key,
@@ -108,6 +116,6 @@ var credentials = {
 var httpsServer = https.createServer(credentials, app);
 
 httpsServer.listen(httpsPort, () => {
-  console.log("Https server listing on port : " + httpsPort)
+  console.log("HTTPS server started on port : " + httpsPort)
+  logger.info("HTTPS server started on port : " + httpsPort)
 });
-*/

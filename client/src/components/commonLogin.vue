@@ -38,6 +38,13 @@
             placeholder="password"
             :rules="[rules.required, rules.password]"
           ></v-text-field>
+          <vue-recaptcha v-if=recaptchaSitekey
+            ref="recaptcha"
+            name="recaptcha"
+            :sitekey="recaptchaSitekey"
+            @verify="registerCaptcha"
+            @expired="onCaptchaExpired"
+          />          
         </v-col>
       </v-container>
       <v-card-actions>
@@ -87,16 +94,24 @@
 </template>
 
 <script>
+import VueRecaptcha from 'vue-recaptcha'
 import serverApi from '@/services/ApiCalls'
+import config from '../config'
 
 export default {
+  components: { 
+    VueRecaptcha
+  },
   data () {
     return {
       register: {
         email: '',
         password: '' 
       },
-      configColor: this.$store.state.titleColor,
+      captureValid: false,
+      recaptchaSitekey: config.recaptchaSitekey,
+
+      configColor: config.titleColor,
       showProgress: false,
 
       rules: {
@@ -153,8 +168,15 @@ export default {
           (this.register.password === null) ||
           (this.register.email === null)) {
         this.error = 'Please fill in all the required fields.'
+        alert(this.error)
         return
       }
+
+      if (!this.captureValid) {
+        alert('Please fill reCaptcha')
+        return
+      }
+
       this.showProgress = true
       this.register.password = this.register.password.trim()
       console.log(this.register)
@@ -186,6 +208,12 @@ export default {
         this.error = 'Please fill in all the required fields.'
         return
       }
+
+      if (!this.captureValid) {
+        alert('Please fill reCaptcha')
+        return
+      }
+
       this.showProgress = true
       this.register.password = this.register.password.trim()
       console.log(this.register)
@@ -197,8 +225,6 @@ export default {
         this.$store.dispatch('setToken', response.data.token)
         this.$store.dispatch('setSessionId', response.data.sessionId)
         this.$store.dispatch('setEmail', response.data.email)
-        this.$store.dispatch('setTitleColor', response.data.titleColor)        
-        this.configColor = this.$store.state.titleColor
       } catch (error) {
         if ((error.response !== undefined) && (error.response.data.error !== undefined)) {
           this.error = error.response.status + ': ' + error.response.data.error
@@ -227,10 +253,37 @@ export default {
                    'state' + '=' + this.$store.state.sessionId
       // like clik on link:
       window.location = queryString
-    }
+    },
+
+    registerCaptcha (recaptchaToken) {
+      console.log('register: ', 'email:', this.register.email, 'this.password: ', this.register.password, 'recaptchaToken: ', recaptchaToken)
+      this.captureValid = true
+      console.log('register: this.captureValid: ', this.captureValid)
+    },
+
+    validate () {
+      console.log('validate: this.captureValid: ', this.captureValid)
+      // тут можно добавить проверку на валидацию
+      // например, с помощью vee validate
+      // если с валидацией наших полей все хорошо, запускаем каптчу
+      // this.$refs.recaptcha.execute()
+      if (this.captureValid === true) {
+        alert('Functionality is under construction...')
+      } else {
+        alert('Plesse check the box!')
+      }
+    },
+
+    onCaptchaExpired () {
+      console.log('onCaptchaExpired')
+      this.captureValid = false
+      this.$refs.recaptcha.reset()
+      console.log('onCaptchaExpired: this.captureValid: ', this.captureValid)
+    }    
   },
   async mounted () {
     console.log('mounted Login isUserLoggedIn: ', this.$store.state.isUserLoggedIn)
+    console.log('mounted Login recaptchaSitekey: ', config.recaptchaSitekey)
   }
 }
 </script>

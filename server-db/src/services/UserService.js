@@ -1,5 +1,5 @@
 const dotenv = require('dotenv')
-dotenv.config()
+const dotenvRes = dotenv.config()
 const axios = require('axios')
 const { Users } = require('../models')
 const uuid = require('uuid')
@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const internalTools = require('./internalTools')
 const logger = require('./logger')
+logger.info('dotenvRes: ', dotenvRes)
 
 module.exports = {
   async updateValidToken (req, res) {
@@ -58,7 +59,6 @@ module.exports = {
            email: verifiedToken.email,
            sessionId: userToUpdate.sessionId,
            token: userToUpdate.commonToken,
-           titleColor: "blue darken-3", 
            status: "Ok"    
        })        
       } catch (error) {
@@ -236,6 +236,7 @@ module.exports = {
            email: req.body.email
         }
       })
+      // logger.info('userCheck: ', userCheck)
 
       if (userCheck && !(userCheck.loginState.indexOf('idle') >= 0)) { // если idle далее сделаем новый 
          if (userCheck.loginState.indexOf('password') >= 0) { // уже есть аккаунт с паролем
@@ -246,18 +247,21 @@ module.exports = {
           return
         }         
 
-        if (userCheck.loginState.indexOf('google') >= 0) { // уже есть google account
+        if (userCheck && (userCheck.loginState.indexOf('google') >= 0)) { // уже есть google account
           // связываем google account:
           logger.info('Google account found for email: ' +  req.body.email + ' bind now.')
 
           let userToUpdate = {}
           userToUpdate.lastLogin = Date.now()
           userToUpdate.name = req.body.name
-          userToUpdate.password = bcrypt.hashSync(req.body.password, 10)
+          // userToUpdate.password = bcrypt.hashSync(req.body.password, 10)
+          userToUpdate.password = await bcrypt.hash(req.body.password, 10)
+
           userToUpdate.sessionId = internalTools.sessionId(req.body.email)      
           userToUpdate.commonToken = internalTools.getToken(req.body.email) 
           userToUpdate.loginState = 'active+google+password'
 
+          logger.debug('userToUpdate: ', userToUpdate)
           await Users.update(userToUpdate, {
           where: {
             email: req.body.email
@@ -286,7 +290,9 @@ module.exports = {
       userToCreate.uuid = uuid.v4() // '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
       userToCreate.name = req.body.name
       userToCreate.email = req.body.email
-      userToCreate.password = bcrypt.hashSync(req.body.password, 10)
+      // userToCreate.password = bcrypt.hashSync(req.body.password, 10)
+      userToCreate.password = await bcrypt.hash(req.body.password, 10)
+
       userToCreate.lastLogin = Date.now()
       userToCreate.googleToken = null
       userToCreate.googleAccessToken = null
@@ -359,7 +365,9 @@ module.exports = {
         return
       }
       // check password
-      let isValid = bcrypt.compareSync(req.body.password, userCheck.password)
+      // let isValid = bcrypt.compareSync(req.body.password, userCheck.password)
+      let isValid = await bcrypt.compare(req.body.password, userCheck.password)
+
       logger.info('password: ' +  req.body.password + ' from db: ' + userCheck.password + 'result: ' + isValid)
       if (!isValid) {        
         logger.error('Wrong user password: ' +  req.body.password)
@@ -383,7 +391,6 @@ module.exports = {
           email: userCheck.email,
           sessionId: userToUpdate.sessionId,
           token: userToUpdate.commonToken,  
-          titleColor: "blue darken-3", 
           status: "Ok"    
       })        
     } catch (error) {
@@ -424,7 +431,9 @@ module.exports = {
           return
         }
         // check password
-        let isValid = bcrypt.compareSync(req.body.password, userCheck.password)
+        // let isValid = bcrypt.compareSync(req.body.password, userCheck.password)
+        let isValid = await bcrypt.compare(req.body.password, userCheck.password)
+
         logger.info('password: ' +  req.body.password + ' from db: ' + userCheck.password + 'result: ' + isValid)
         if (!isValid) {        
           logger.error('Wrong user password: ' +  req.body.password)
@@ -598,7 +607,7 @@ module.exports = {
           logger.info('refresh_token is absent.')
         }
         userToUpdate.sessionId = state // полученный из клиента через google
-        if (userCheck.loginState.indexOf('password') >=0 ) { // active+google+password
+        if (userCheck && (userCheck.loginState.indexOf('password') >=0 )) { // active+google+password
           userToUpdate.loginState = 'active+google+password'
         } else {
           userToUpdate.loginState = 'active+google'

@@ -51,13 +51,13 @@
 </template>
 
 <script>
-// import dotenv from 'dotenv'
+import config from '../config'
 import serverApi from '@/services/ApiCalls'
 
 export default {
   data () {
     return {
-      configColor: this.$store.state.titleColor,
+      configColor: config.titleColor,
       showProgress: false,
       error: 'Status: ',
 
@@ -97,9 +97,7 @@ export default {
     console.log('mounted newData isUserLoggedIn: ', this.$store.state.isUserLoggedIn)
     if (!this.$store.state.isUserLoggedIn) {
       this.navigateTo({ name: 'Home' }) 
-    } else {
-      this.configColor = localStorage.titleColor
-    }
+    } 
   }
 
 }

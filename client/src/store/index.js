@@ -9,8 +9,7 @@ export default new Vuex.Store({
     email: null,
     sessionId: null,
     isUserLoggedIn: false,
-    drawer: true,
-    titleColor: 'blue darken-3'
+    drawer: true
   },
   mutations: {
     setToken (state, token) { 
@@ -31,10 +30,6 @@ export default new Vuex.Store({
     },
     setDrawer (state, _drawer) { 
       state.drawer = _drawer
-    },
-    setTitleColor (state, titleColor) { 
-      state.titleColor = titleColor
-      localStorage.titleColor = titleColor
     }
   },
   actions: {
@@ -49,9 +44,6 @@ export default new Vuex.Store({
     },    
     setDrawer ({ commit }, drawer) { 
       commit('setDrawer', drawer)
-    },
-    setTitleColor ({ commit }, titleColor) { 
-      commit('setTitleColor', titleColor)
     }
   },
   modules: { 

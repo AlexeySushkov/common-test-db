@@ -49,11 +49,9 @@ export default {
   },
   async mounted () {
     console.log('mounted AppBar isUserLoggedIn: ', this.$store.state.isUserLoggedIn)
-    this.configColor = config.titleColor
   },
   async updated () {
     console.log('updated AppBar isUserLoggedIn: ', this.$store.state.isUserLoggedIn)
-    this.configColor = config.titleColor
   }
 }
 </script>

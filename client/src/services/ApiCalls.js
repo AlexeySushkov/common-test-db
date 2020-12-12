@@ -1,5 +1,4 @@
 import Api from '@/services/Api'
-import ApiHTTPS from '@/services/ApiCallsHTTPS'
 
 export default {
   // for autologin
@@ -36,19 +35,11 @@ export default {
   deleteData (data) {
     return Api().delete('data', {
       params: {
-        id: data
+        uuid: data
       }
     })
   },     
   newData (data) {
     return Api().post('data', data)
-  },
-  
-  // OpenAPI HTTPS
-  registerHTTPS (record) {
-    return ApiHTTPS().post('register', record)
-  },
-  loginHTTPS (record) {
-    return ApiHTTPS().post('login', record)
   }
 }

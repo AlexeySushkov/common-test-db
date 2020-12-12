@@ -9,46 +9,7 @@ const logger = require('./logger')
 
 
 module.exports = {
-
-
-  async deleteData (req, res) {
-    try {
-      logger.info('deleteData query: ', req.query)
-      let updateInvalidTokenRes = await internalTools.updateInvalidToken(req)
-      if (updateInvalidTokenRes === null) {
-        throw 'Update token error'
-      }     
-
-      // let checkOwner = await internalTools.checkDataOwner(req.body.id ???, updateInvalidTokenRes.uuid)     
-      // if ( checkOwner === null) {
-      //   throw 'Check data owner error'
-      // } 
-      await Data.destroy( {
-        where: {
-          id: req.query.id
-        }
-      })      
-      logger.info('Data delete ok')    
-
-
-      res.status(200).send({ 
-        status: "Ok",
-        sessionId: updateInvalidTokenRes.sessionId,
-        token: updateInvalidTokenRes.token
-      })        
-
-    } catch (error) {
-      if ((error.response !== undefined) && (error.response.data.error !== undefined)) {
-        logger.error('Error status: ', error.response.status, ', message: ', error.response.data.error)
-      } else {
-        logger.error('No connection to the server or other error')
-      }
-      res.status(500).send({
-        error: 'Delete data error'
-      })
-    }
-  },  
-  
+ 
   
   async getData (req, res) {
     try {
@@ -133,7 +94,7 @@ module.exports = {
             
       let dataToCreate = {}
       dataToCreate.uuid = uuid.v4() // '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
-      dataToCreate.ownerUuid = uuid.v4() // '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
+      dataToCreate.ownerUuid = updateInvalidTokenRes.uuid
       dataToCreate.data = req.body
       logger.info(dataToCreate)
 
@@ -155,6 +116,45 @@ module.exports = {
       }
       res.status(500).send({
         error: 'Create data error'
+      })
+    }
+  },
+
+  async deleteData (req, res) {
+    try {
+      logger.info('deleteData query: ', req.query)
+      let updateInvalidTokenRes = await internalTools.updateInvalidToken(req)
+      if (updateInvalidTokenRes === null) {
+        throw 'Update token error'
+      }     
+
+      let checkOwner = await internalTools.checkDataOwner(req.query.uuid, updateInvalidTokenRes.uuid)     
+      if ( checkOwner === null) {
+        throw 'Check data owner error'
+      } 
+
+      await Data.destroy( {
+        where: {
+          uuid: req.query.uuid
+        }
+      })      
+      logger.info('Data delete ok')    
+
+
+      res.status(200).send({ 
+        status: "Ok",
+        sessionId: updateInvalidTokenRes.sessionId,
+        token: updateInvalidTokenRes.token
+      })        
+
+    } catch (error) {
+      if ((error.response !== undefined) && (error.response.data.error !== undefined)) {
+        logger.error('Error status: ', error.response.status, ', message: ', error.response.data.error)
+      } else {
+        logger.error('No connection to the server or other error: ', error)
+      }
+      res.status(500).send({
+        error: 'Delete data error'
       })
     }
   }

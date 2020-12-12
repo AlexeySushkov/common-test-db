@@ -20,7 +20,6 @@ export default {
           this.$store.dispatch('setToken', response.data.token)
           this.$store.dispatch('setSessionId', response.data.sessionId)
           this.$store.dispatch('setEmail', response.data.email)
-          this.$store.dispatch('setTitleColor', response.data.titleColor)        
         }
       } catch (error) {
         if ((error.response !== undefined) && (error.response.data.error !== undefined)) {

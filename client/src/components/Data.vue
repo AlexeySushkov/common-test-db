@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import config from '../config'
 import serverApi from '@/services/ApiCalls'
 
 export default {
@@ -72,7 +73,7 @@ export default {
     return {
       error: 'Status: ',
       dataList: null,
-      configColor: this.$store.state.titleColor,
+      configColor: config.titleColor,
       showProgress: false,
       dialogConfirmDelete: false,
       cardToDelete: {}
@@ -95,7 +96,7 @@ export default {
       card.showProgress = true
 
       try {
-        const response = await serverApi.deleteData(card.id)
+        const response = await serverApi.deleteData(card.uuid)
         if (response.data.token !== undefined) {
           console.log('deleteData response: response.data.token - Ok')
           this.$store.dispatch('setToken', response.data.token)
@@ -104,19 +105,21 @@ export default {
           console.log('deleteData response: response.data.sessionId - Ok')
           this.$store.dispatch('setSessionId', response.data.sessionId)
         }
-        await this.getData()
-
         this.error = 'Delete Data - Ok'
+        alert(this.error)
+
+        await this.getData()
       } catch (error) {
         if ((error.response !== undefined) && (error.response.data.error !== undefined)) {
           this.error = error.response.status + ': ' + error.response.data.error
         } else {
           this.error = 'No connection to the server'
         }
+        alert(this.error)
       }
-      alert(this.error)
       card.showProgress = false
     },
+    
     async getData () {
       console.log('getData')
 
@@ -169,7 +172,6 @@ export default {
     if (!this.$store.state.isUserLoggedIn) {
       this.navigateTo({ name: 'Home' }) 
     } else {
-      this.configColor = localStorage.titleColor
       await this.getData()
     }
   }

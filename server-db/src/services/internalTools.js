@@ -25,11 +25,13 @@ module.exports = {
         return  uuid.v4() // '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
     },
 
-    async checkDataOwner(id, uuid) {
+    async checkDataOwner(uuid, ownerUuid) {
       try {
-        logger.info('checkDataOwner id: ', id, ' uuid: ', uuid)
+        logger.info('checkDataOwner uuid: ', uuid, ' ownerUuid: ', ownerUuid)
   
-        let data = await db.sequelize.query(`SELECT * FROM "Data" WHERE id > 0 AND "ownerUuid" = :uuid AND data ->> 'id' = :id LIMIT :limit;`, { replacements: { uuid: uuid, id: id, limit: config.db.limit } })
+        let data = await db.sequelize.query(`SELECT * FROM "Data" WHERE uuid = :uuid AND ownerUuid = :ownerUuid LIMIT :limit;`, { replacements: { uuid: uuid, ownerUuid: ownerUuid, limit: config.db.limit } })
+        logger.info('data: ', data)
+        logger.info('data[0]: ', data[0].length)
         if (data[0].length > 0) {
           return 'Ok'
         } 
@@ -65,8 +67,32 @@ module.exports = {
         } catch (error) {
             logger.error('updateInvalidToken, Error: ', error, 'try to get new token:')
         }
+          
+          let lastRequestDate = new Date(userToken.lastRequest)
+
+          logger.info('userToken.requestsNumber: ', userToken.requestsNumber, 'lastRequestDate: ', lastRequestDate.toISOString())
+          const maxReguests = 1000 // 1000 requests
+          const maxMinutesTimeout = 60 * 60000 // one hour timout
           let userToUpdate = {}
-          userToUpdate.lastLogin = Date.now()
+
+          if ( userToken.requestsNumber >= maxReguests ) {
+
+            let plusMaxMinutes = new Date(lastRequestDate.getTime() + maxMinutesTimeout)
+            let now = new Date (Date.now())
+            
+            logger.info('plusMaxMinutes: ', plusMaxMinutes.toISOString(), ' now.toISOString(): ', now.toISOString())
+   
+            if (plusMaxMinutes > now) {
+              logger.error('maxReguests and time exceeded!')
+              return null
+            } else {
+              userToUpdate.requestsNumber = 1
+            }
+          } else {
+            userToUpdate.requestsNumber = userToken.requestsNumber + 1     
+          }
+
+          userToUpdate.lastRequest = Date.now()
           userToUpdate.sessionId = this.sessionId(decodedToken.email )      
           userToUpdate.commonToken = this.getToken(decodedToken.email )      
           await Users.update(userToUpdate, {
