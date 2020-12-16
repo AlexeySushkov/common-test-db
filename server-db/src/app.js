@@ -1,6 +1,7 @@
 const express = require('express');
 
 const app = express();
+const { sequelize } = require('./models')
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 const config = require('./config/config')
@@ -59,8 +60,6 @@ var helmet = require('helmet')
 app.use(helmet())
 app.disable('x-powered-by')
 
-const { sequelize } = require('./models')
-
 const swaggerUi = require('swagger-ui-express')
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger/swagger.yaml')
@@ -86,16 +85,7 @@ app.use(log4js.connectLogger(logger, { level: 'info' }));
 
 require('./routes')(app)
  
-async () => {
-  try {
-      // true - очистка базы:
-      await sequelize.sync({ force: false })
-    } catch(err) {
-      console.error('sequelize.sync exeption')
-      process.exit()
-  }
-}
-
+// HTTP server
 // app.listen(config.port)
 // logger.info(`Server started on port ${config.port}`)
 // console.log(`Server started on port ${config.port}`)
@@ -113,9 +103,20 @@ var credentials = {
   cert: cert
 }
 
-var httpsServer = https.createServer(credentials, app);
+async function startAll() {
+  try {
+    console.log('sequelize.sync')
+    // true - очистка базы:
+      await sequelize.sync({ force: false })
+      var httpsServer = https.createServer(credentials, app);
 
-httpsServer.listen(httpsPort, () => {
-  console.log("HTTPS server started on port : " + httpsPort)
-  logger.info("HTTPS server started on port : " + httpsPort)
-});
+      httpsServer.listen(httpsPort, () => {
+        console.log("HTTPS server started on port : " + httpsPort)
+        logger.info("HTTPS server started on port : " + httpsPort)
+      });
+    } catch(err) {
+      console.error('sequelize.sync exeption')
+      process.exit()
+  }
+}
+startAll()

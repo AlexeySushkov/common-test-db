@@ -2,7 +2,6 @@ const dotenv = require('dotenv')
 dotenv.config()
 const uuid = require('uuid')
 const db = require('../models/index')
-const { Data } = require('../models')
 const config = require('../config/config')
 const internalTools = require('./internalTools')
 const logger = require('./logger')
@@ -93,12 +92,13 @@ module.exports = {
       }    
             
       let dataToCreate = {}
+      dataToCreate.UserId = updateInvalidTokenRes.id
       dataToCreate.uuid = uuid.v4() // '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
       dataToCreate.ownerUuid = updateInvalidTokenRes.uuid
       dataToCreate.data = req.body
-      logger.info(dataToCreate)
+      logger.debug(dataToCreate)
 
-      await Data.create(dataToCreate)
+      await db.Data.create(dataToCreate)
 
       // let userJson = user.toJSON()
       logger.info('Data create ok')   
@@ -133,7 +133,7 @@ module.exports = {
         throw 'Check data owner error'
       } 
 
-      await Data.destroy( {
+      await db.Data.destroy( {
         where: {
           uuid: req.query.uuid
         }

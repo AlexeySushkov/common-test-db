@@ -1,2 +1,237 @@
 ---
-  
+swagger: "2.0"
+info:
+  description: "This is a common-test-db API. You can find out more about common-test-db at https://github.com/AlexeySushkov/common-test-db"  
+  version: "2.0.0"
+  title: "common-test-db"
+  contact:
+    email: "alexey.p.sushkov@gmail.com"
+  license:
+    name: "MIT License"
+    url: "https://github.com/AlexeySushkov/common-test-db/blob/main/LICENSE"
+host: "localhost:443"
+basePath: "/commontest/v1"
+tags:
+- name: "data"
+  description: "Everything about Data"
+  externalDocs:
+    description: "Find out more"
+    url: "https://github.com/AlexeySushkov/common-test-db/"
+- name: "users"
+  description: "Everything about Users"
+  externalDocs:
+    description: "Find out more"
+    url: "https://github.com/AlexeySushkov/common-test-db/"
+schemes:
+- "https"
+paths:
+  /data:
+    get:
+      tags:
+      - "data"
+      summary: "Gets all data"
+      description: "Gets all data"
+      operationId: "getData"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Data"
+        "400":
+          description: "Invalid status value"
+      x-swagger-router-controller: "Data"
+    post:
+      tags:
+      - "data"
+      summary: "Add a new data to the db"
+      operationId: "addData"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data object that needs to be added to the db"
+        required: true
+        schema:
+          $ref: "#/definitions/Data"
+      responses:
+        "500":
+          description: "Create data error"
+      x-swagger-router-controller: "Data"
+    put:
+      tags:
+      - "data"
+      summary: "Update an existing data"
+      operationId: "updateData"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data information that needs to be changed"
+        required: true
+        schema:
+          $ref: "#/definitions/Data"
+      responses:
+        "400":
+          description: "Invalid uuid"
+        "404":
+          description: "User not found"
+        "500":
+          description: "Update data error"
+      x-swagger-router-controller: "Data"
+    delete:
+      tags:
+      - "data"
+      summary: "Delete an existing data"
+      operationId: "deleteData"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "uuid"
+        in: "formData"
+        description: "uuid"
+        required: true
+        type: "string"
+      responses:
+        "400":
+          description: "Invalid uuid"
+        "404":
+          description: "User not found"
+        "500":
+          description: "Delete data error"
+      x-swagger-router-controller: "Data"
+  /users:
+    post:
+      tags:
+      - "users"
+      summary: "Register new user"
+      operationId: "userRegister"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User that needs to be deleted"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "500":
+          description: "Register user error"
+      x-swagger-router-controller: "Users"
+    put:
+      tags:
+      - "users"
+      summary: "Update existing user"
+      operationId: "userUpdate"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User information that needs to be changed"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "404":
+          description: "User not found"
+        "500":
+          description: "Delete user error"
+      x-swagger-router-controller: "Users"
+    delete:
+      tags:
+      - "users"
+      summary: "Delete user"
+      operationId: "userDelete"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User that needs to be added to the db"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "404":
+          description: "User not found"
+        "500":
+          description: "Delete user error"
+      x-swagger-router-controller: "Users"
+  /users/login:
+    post:
+      tags:
+      - "users"
+      summary: "Login"
+      operationId: "userLogin"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User that needs to be added to the db"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "404":
+          description: "User not found"
+        "500":
+          description: "Login user error"
+      x-swagger-router-controller: "Users"
+definitions:
+  Data:
+    type: "object"
+    required:
+    - "Counter1"
+    - "Counter2"
+    properties:
+      Counter1:
+        type: "integer"
+        format: "int64"
+      Counter2:
+        type: "integer"
+        format: "int64"
+    example:
+      Counter1: 10
+      Counter2: 20
+  User:
+    type: "object"
+    required:
+    - "email"
+    - "password"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+    example:
+      password: "password"
+      email: "email"
+  ApiResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"

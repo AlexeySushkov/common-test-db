@@ -68,14 +68,14 @@ module.exports = {
             logger.error('updateInvalidToken, Error: ', error, 'try to get new token:')
         }
           
-          let lastRequestDate = new Date(userToken.lastRequest)
+          let lastRequestDate = new Date(userToken.ddosLastRequest)
 
           logger.info('userToken.requestsNumber: ', userToken.requestsNumber, 'lastRequestDate: ', lastRequestDate.toISOString())
           const maxReguests = 1000 // 1000 requests
           const maxMinutesTimeout = 60 * 60000 // one hour timout
           let userToUpdate = {}
 
-          if ( userToken.requestsNumber >= maxReguests ) {
+          if ( userToken.ddosRequestsNumber >= maxReguests ) {
 
             let plusMaxMinutes = new Date(lastRequestDate.getTime() + maxMinutesTimeout)
             let now = new Date (Date.now())
@@ -86,15 +86,15 @@ module.exports = {
               logger.error('maxReguests and time exceeded!')
               return null
             } else {
-              userToUpdate.requestsNumber = 1
+              userToUpdate.ddosRequestsNumber = 1
             }
           } else {
-            userToUpdate.requestsNumber = userToken.requestsNumber + 1     
+            userToUpdate.ddosRequestsNumber = userToken.ddosRequestsNumber + 1     
           }
 
-          userToUpdate.lastRequest = Date.now()
+          userToUpdate.ddosLastRequest = Date.now()
           userToUpdate.sessionId = this.sessionId(decodedToken.email )      
-          userToUpdate.commonToken = this.getToken(decodedToken.email )      
+          userToUpdate.commonToken = this.getToken(decodedToken.email )  
           await Users.update(userToUpdate, {
             where: {
               email: decodedToken.email 
@@ -105,7 +105,8 @@ module.exports = {
              sessionId: userToUpdate.sessionId,
              token: userToUpdate.commonToken,
              email: userToken.email,
-             uuid: userToken.uuid
+             uuid: userToken.uuid,
+             id: userToken.id
          }
        },
 }

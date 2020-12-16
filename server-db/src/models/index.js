@@ -26,7 +26,10 @@ Object.keys(db).forEach(function (modelName) {
     db[modelName].associate(db)
   }
 })
+
 console.log(db)
+db['Users'].hasOne(db['Data'])
+db['Data'].belongsTo(db['Users'])
 
 db.sequelize = sequelize
 db.Sequelize = Sequelize

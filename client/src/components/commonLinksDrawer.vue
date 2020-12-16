@@ -123,6 +123,19 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item
+          :key="items[6].text"
+          @click="Swagger"
+        >
+          <v-list-item-action>
+            <v-icon>{{ items[6].icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ items[6].text }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -138,12 +151,16 @@ export default {
       { icon: 'mdi-plus-circle-outline', text: 'New Data', link: '/newData' },
       { icon: 'mdi-logout', text: 'Logout', link: '/logout' },
       { icon: 'mdi-login', text: 'Login/Register', link: '/login' },
-      { icon: 'mdi-information-outline', text: 'About' }
+      { icon: 'mdi-information-outline', text: 'About' },
+      { icon: 'mdi-api', text: 'Swagger' }
     ],
     configColor: config.titleColor,
     aboutDialog: false
   }),
   methods: {
+    async Swagger () {
+      window.location = 'https://localhost/api-docs/#/'
+    }
   }
 
 }

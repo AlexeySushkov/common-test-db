@@ -1,10 +1,18 @@
-
-
 module.exports = (sequelize, DataTypes) => {
   const Data = sequelize.define('Data', {
-    uuid: DataTypes.UUID,
-    ownerUuid: DataTypes.UUID,
-    data: DataTypes.JSON
+    uuid: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      unique: true
+    },    
+    ownerUuid: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },    
+    data: {
+      type: DataTypes.JSON,
+      allowNull: false
+    },
   })
 
   Data.associate = function (models) {
