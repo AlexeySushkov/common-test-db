@@ -33,7 +33,7 @@ module.exports = {
     scope: 'openid email'
   },
   cors: {
-      "origin": ['http://localhost:8080'],
+      "origin": "*",
       "methods": "GET,POST,PUT,DELETE",
       "preflightContinue": false,
       "optionsSuccessStatus": 204

@@ -94,7 +94,7 @@ const fs = require('fs')
 const https = require('https');
 
 // стандартный для HTTPS порт 443 
-const httpsPort = 443
+const httpsPort = 3000
 var key = fs.readFileSync(__dirname + '/certs/server.key')
 var cert = fs.readFileSync(__dirname + '/certs/server.crt')
 
