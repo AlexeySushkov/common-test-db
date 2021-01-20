@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DataNew DataNew wrapper 1`] = `
+<main class="v-main v-content" style="padding: 0px 0px 0px 0px;">
+  <div class="v-main__wrap v-content__wrap">
+    <div class="mx-auto v-card v-sheet v-sheet--outlined theme--light elevation-3" style="max-width: 800px;">
+      <div role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" class="v-progress-linear v-progress-linear--absolute theme--light" style="bottom: 0px; height: 0px;">
+        <div class="v-progress-linear__background blue darken-3" style="opacity: 0.3; left: 0%; width: 100%;"></div>
+        <div class="v-progress-linear__buffer" style="height: 0px;"></div>
+        <transition-stub name="slide-x-transition">
+          <div class="v-progress-linear__determinate blue darken-3" style="width: 0%;"></div>
+        </transition-stub>
+      </div>
+      <header class="v-sheet theme--dark v-toolbar v-toolbar--dense v-toolbar--flat blue darken-3" style="height: 48px;">
+        <div class="v-toolbar__content" style="height: 48px;">
+          <div class="v-toolbar__title">New Data</div>
+        </div>
+      </header>
+      <div class="container">
+        <div class="col">
+          <div class="v-input v-input--is-label-active v-input--is-dirty theme--light v-text-field v-select">
+            <div class="v-input__control">
+              <div role="button" aria-haspopup="listbox" aria-expanded="false" aria-owns="list-9" class="v-input__slot">
+                <div class="v-select__slot"><label for="input-9" class="v-label v-label--active theme--light" style="left: 0px; position: absolute;">Counter 1</label>
+                  <div class="v-select__selections">
+                    <div class="v-select__selection v-select__selection--comma">10</div><input id="input-9" readonly="readonly" type="text" aria-readonly="false" autocomplete="off">
+                  </div>
+                  <div class="v-input__append-inner">
+                    <div class="v-input__icon v-input__icon--append"><i aria-hidden="true" class="v-icon notranslate mdi mdi-menu-down theme--light"></i></div>
+                  </div><input type="hidden" value="10">
+                </div>
+                <div class="v-menu">
+                  <!---->
+                </div>
+              </div>
+              <div class="v-text-field__details">
+                <div class="v-messages theme--light">
+                  <transition-group-stub tag="div" name="message-transition" class="v-messages__wrapper"></transition-group-stub>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="v-input v-input--is-label-active v-input--is-dirty theme--light v-text-field v-select">
+            <div class="v-input__control">
+              <div role="button" aria-haspopup="listbox" aria-expanded="false" aria-owns="list-14" class="v-input__slot">
+                <div class="v-select__slot"><label for="input-14" class="v-label v-label--active theme--light" style="left: 0px; position: absolute;">Counter 2</label>
+                  <div class="v-select__selections">
+                    <div class="v-select__selection v-select__selection--comma">20</div><input id="input-14" readonly="readonly" type="text" aria-readonly="false" autocomplete="off">
+                  </div>
+                  <div class="v-input__append-inner">
+                    <div class="v-input__icon v-input__icon--append"><i aria-hidden="true" class="v-icon notranslate mdi mdi-menu-down theme--light"></i></div>
+                  </div><input type="hidden" value="20">
+                </div>
+                <div class="v-menu">
+                  <!---->
+                </div>
+              </div>
+              <div class="v-text-field__details">
+                <div class="v-messages theme--light">
+                  <transition-group-stub tag="div" name="message-transition" class="v-messages__wrapper"></transition-group-stub>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="v-card__actions"><button type="button" class="v-btn v-btn--is-elevated v-btn--has-bg v-btn--rounded theme--dark v-size--default blue darken-3"><span class="v-btn__content">
+        Create
+      </span></button> <button type="button" class="v-btn v-btn--is-elevated v-btn--has-bg v-btn--rounded theme--dark v-size--default blue darken-3"><span class="v-btn__content">
+        Cancel
+      </span></button></div>
+    </div>
+  </div>
+</main>
+`;
