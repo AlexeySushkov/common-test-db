@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-main>
   <v-app-bar
     :clipped-left="$vuetify.breakpoint.lgAndUp"
     app
@@ -29,7 +29,7 @@
     </v-toolbar-title>
     <v-spacer />     
   </v-app-bar>
-  </v-content>
+  </v-main>
 </template>
 
 <script>

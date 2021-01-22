@@ -1,5 +1,8 @@
 # Certificates
 certs
+# local db
+CommonTestDB.sqlite
+
 # Logs
 logs
 *.log

@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-main>
     <v-card
       class="mx-auto"
       outlined
@@ -32,6 +32,7 @@
       </v-container>
       <v-card-actions>
         <v-btn
+          class="newDataCall"
           rounded
           dark
           :color = "configColor"
@@ -39,6 +40,7 @@
           Create
         </v-btn>     
         <v-btn
+          class="Cancel"
           rounded
           dark
           :color = "configColor"
@@ -47,7 +49,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-  </v-content>
+  </v-main>
 </template>
 
 <script>

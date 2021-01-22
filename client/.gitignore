@@ -1,6 +1,14 @@
 .DS_Store
 node_modules
 /dist
+# UnitTests
+test/unit/__snapshots__
+*.snap
+coverage
+*.lcov
+
+# local db
+*.sqlite
 
 # local env files
 .env.local
@@ -19,3 +27,5 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Coverage directory used by tools like istanbul

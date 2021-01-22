@@ -1,5 +1,5 @@
 <template>
-   <v-content>   
+   <v-main>   
     <v-dialog v-model="dialogConfirmDelete" persistent max-width="290">
       <v-card>
         <v-card-title class="headline">Are you shure?</v-card-title>
@@ -61,7 +61,7 @@
         </v-col>
       </v-row>
    </v-container>
-  </v-content>
+  </v-main>
 </template>
 
 <script>

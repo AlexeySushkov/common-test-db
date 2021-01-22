@@ -1,7 +1,5 @@
 <template>
-  <v-content>
-
-  </v-content>
+  <v-main/>
 </template>
 <script>
 import serverApi from '@/services/ApiCalls'

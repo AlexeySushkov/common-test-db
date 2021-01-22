@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-main>
     <v-col
       align="start"
       justify="start"    
@@ -90,7 +90,7 @@
       </v-card-actions>
     </v-card>
     </v-col>
-  </v-content>
+  </v-main>
 </template>
 
 <script>

@@ -1,15 +1,15 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
 import Vuetify from 'vuetify'
 
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils'
+import flushPromises from 'flush-promises'
+
 import DataNew from '@/components/DataNew';
+jest.mock('axios')
 import store from '@/store/index'
-const VueWithVuex = createLocalVue()
-VueWithVuex.use(Vuex)
 Vue.use(Vuetify)
 
-describe('DataNew', () => {
+describe('DataNew tests', () => {
   const localVue = createLocalVue()
   localVue.use(Vuetify)
   let vuetify
@@ -17,8 +17,8 @@ describe('DataNew', () => {
   beforeEach(() => {
     vuetify = new Vuetify()
   })
-
-  it('DataNew wrapper', () => {
+  // Only snapshot
+  it('DataNew snapshot', () => {
       const wrapper = mount(DataNew, {
         localVue,
         vuetify,
@@ -26,26 +26,43 @@ describe('DataNew', () => {
       })
       expect(wrapper.html()).toMatchSnapshot()
   })
-//   test('DataNew mount', () => {
-//     jest.useFakeTimers()
-//     const mountedCall = jest.spyOn(DataNew, 'mounted')
-//     const wrapper = mount(DataNew, {
-//       localVue: VueWithVuex,
-//       store
-//     })
-//     console.log('this.error: ', wrapper.vm.error)
-//     expect(mountedCall).toHaveBeenCalled()
-//   })
-//   test('DataNew store', () => {
-//     const wrapper = mount(DataNew, {
-//       localVue: VueWithVuex,
-//       store
-//     })
-//     // this.$store.state.isUserLoggedIn
-//     console.log('isUserLoggedIn before: ', store.state.isUserLoggedIn)
-//     // this.$store.dispatch('setToken', response.data.token)
-//     store.dispatch('setToken', 'Token from UnitTest')
-//     console.log('isUserLoggedIn after: ', store.state.isUserLoggedIn)
-// })
+  // "mounted" func called and user login and check default values
+  it('DataNew mounted called', () => {
+    const mountedCall = jest.spyOn(DataNew, 'mounted')
+    const wrapper = mount(DataNew, {
+      localVue,
+      vuetify,
+      store
+    })
+    expect(mountedCall).toHaveBeenCalled()
+    store.dispatch('setToken', 'Token from UnitTest to login user')
+    console.log('isUserLoggedIn after: ', store.state.isUserLoggedIn)
+    expect(store.state.isUserLoggedIn).toBe(true)  
+    expect(wrapper.vm.newData.data.Counter1).toBe('10')
+    expect(wrapper.vm.newData.data.Counter2).toBe('20')
+  })
+  // Click the button 'newDataCall'
+  it('DataNew call newDataCall', async () => {
+    // jest.useFakeTimers()
+    // jest.advanceTimersByTime(10000)
+
+    const wrapper = mount(DataNew, {
+      localVue,
+      vuetify,
+      store
+    })
+    store.dispatch('setToken', 'Token from UnitTest to login user')
+    console.log('isUserLoggedIn: ', store.state.isUserLoggedIn)
+    expect(store.state.isUserLoggedIn).toBe(true)  
+
+    // Click not implemented just check existence
+    const button1 = wrapper.find('button.newDataCall')  
+    expect(button1.exists()).toBe(true)
+    const button2 = wrapper.find('button.Cancel')  
+    expect(button2.exists()).toBe(true)
+
+    // button.trigger('click')
+    // await flushPromises()
+  })
 })
 
